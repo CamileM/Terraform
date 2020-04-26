@@ -9,5 +9,5 @@ variable "name" {
 }
 
 variable "ami_id" {
-  default = "ami-040bb941f8d94b312"
+  default = "ami-03aa29f8ced0848d4"
 }
