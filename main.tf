@@ -33,7 +33,7 @@ resource "aws_internet_gateway" "igw" {
 # Creates App with the variables we passed to it
 module "app" {
   source = "./modules/app_tier"
-  vpc_id = var.vpc_id
+  vpc_id = aws_vpc.app_vpc.id
   name = var.name
   ami_id = var.ami_id
   gateway_id = aws_internet_gateway.igw.id

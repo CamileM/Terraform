@@ -59,15 +59,19 @@ resource "aws_network_acl" "public-nacl" {
     from_port  = 0
     to_port    = 0
   }
+
+  tags = {
+    Name = "${var.name}-public-nacl"
+  }
 }
 
 # PUBLIC SUBNET
 resource "aws_subnet" "app_subnet" {
   vpc_id = var.vpc_id
-  cidr_block = "172.31.15.0/24"
+  cidr_block = "10.0.17.0/24"
   availability_zone = "eu-west-1a"
   tags = {
-    Name = var.name
+    Name = "${var.name}-public-subnet"
   }
 }
 
@@ -113,7 +117,7 @@ resource "aws_security_group" "app_sg" {
   }
 
   tags = {
-    Name = "sg-${var.name}-tags"
+    Name = "${var.name}-public-sg"
   }
 }
 
@@ -151,7 +155,7 @@ resource "aws_instance" "app_instance" {
   subnet_id = aws_subnet.app_subnet.id
   vpc_security_group_ids = [aws_security_group.app_sg.id]
   tags = {
-    Name = "${var.name}"
+    Name = "${var.name}-App"
   }
   key_name = "camile-eng54"
 
