@@ -5,7 +5,7 @@ variable "vpc_id" {
 }
 
 variable "name" {
-  default = "ENG54-Camile-app"
+  default = "Camile-Eng54"
 }
 
 variable "ami_id" {
