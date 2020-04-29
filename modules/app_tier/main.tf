@@ -5,6 +5,7 @@
 # CREATING NACLs
 resource "aws_network_acl" "public-nacl" {
   vpc_id = var.vpc_id
+  # subnet_id = [aws_subnet.app_subnet.id]
 
   ingress {
     protocol   = "tcp"
@@ -13,15 +14,6 @@ resource "aws_network_acl" "public-nacl" {
     cidr_block = "0.0.0.0/0"
     from_port  = 80
     to_port    = 80
-  }
-
-  ingress {
-    protocol   = "tcp"
-    rule_no    = 110
-    action     = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 443
-    to_port    = 443
   }
 
   ingress {
@@ -51,9 +43,18 @@ resource "aws_network_acl" "public-nacl" {
     to_port    = 22
   }
 
-  egress {
+  ingress {
     protocol   = "tcp"
-    rule_no    = 10
+    rule_no    = 150
+    action     = "allow"
+    cidr_block = "10.0.1.0/24"
+    from_port  = 27017
+    to_port    = 27017
+  }
+
+  egress {
+    protocol   = -1
+    rule_no    = 100
     action     = "allow"
     cidr_block = "0.0.0.0/0"
     from_port  = 0
@@ -68,7 +69,7 @@ resource "aws_network_acl" "public-nacl" {
 # PUBLIC SUBNET
 resource "aws_subnet" "app_subnet" {
   vpc_id = var.vpc_id
-  cidr_block = "10.0.17.0/24"
+  cidr_block = "10.0.2.0/24"
   availability_zone = "eu-west-1a"
   tags = {
     Name = "${var.name}-public-subnet"
@@ -107,12 +108,20 @@ resource "aws_security_group" "app_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    description = ""
+    from_port   = 1024
+    to_port     = 65535
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
 # DEFAULT OUTBOUND RULES FOR SECURITY GROUP.
   # LETS EVERYTHING OUT
   egress {
     from_port   = 0
     to_port     = 0
-    protocol    = "-1"
+    protocol    = -1
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -144,6 +153,7 @@ data "template_file" "app_init" {
   template = file("./scripts/app/init.sh.tpl")
   vars = {
     my_name = "${var.name} is the real name Camile"
+    db_private_ip = var.instance_ip_address
   }
 }
 

@@ -15,6 +15,6 @@ variable "ami_id" {
 }
 
 # Mongodb AMI
-variable "ami_id2" {
+variable "ami_id_db" {
   default = "ami-0459d942ad7fa87bc"
 }

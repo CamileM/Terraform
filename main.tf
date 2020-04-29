@@ -37,12 +37,13 @@ module "app" {
   name = var.name
   ami_id = var.ami_id
   gateway_id = aws_internet_gateway.igw.id
+  instance_ip_address = module.db.instance_ip_address
 }
 
 module "db" {
-  source = "./modules/app_tier"
+  source = "./modules/db_tier"
   vpc_id = aws_vpc.app_vpc.id
   name = var.name
-  ami_id = var.ami_id
+  ami_id_db = var.ami_id_db
   gateway_id = aws_internet_gateway.igw.id
 }

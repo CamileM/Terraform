@@ -13,3 +13,7 @@ variable "ami_id" {
 variable "gateway_id" {
   description = " "
 }
+
+variable "instance_ip_address" {
+  description = " "
+}
